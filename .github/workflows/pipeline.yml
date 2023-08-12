@@ -42,3 +42,20 @@ jobs:
       with:
         service-id: ${{ secrets.SERVICE_ID }}
         api-key: ${{ secrets.API_KEY }}
+
+  ui-tests:
+    runs-on: ubuntu-latest
+    need: deploy
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Installing NPM
+        run: npm install
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Ui tests  
+        run: npm run test:ui
